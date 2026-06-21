@@ -1,94 +1,96 @@
 # Driver Attention Monitor (DMS)
 
-A real-time **Driver Monitoring System** that estimates a **Driver Attention
-Score (0–100)** from a regular webcam, combining classic computer vision with
-deep learning. It is the final project for the **Computer Vision** course
-(IFMG – Campus Formiga).
+Um **sistema de monitoramento do motorista** em tempo real que estima uma
+**Pontuação de Atenção do Motorista (0–100)** a partir de uma webcam comum,
+combinando visão computacional clássica com deep learning. É o projeto final da
+disciplina de **Visão Computacional** (IFMG – Campus Formiga).
 
-> The system does not measure only fatigue — it measures **attention**, fusing
-> eye state, yawning, microsleep, head pose, gaze direction and hand-held
-> objects into a single score.
+> O sistema não mede apenas fadiga — ele mede **atenção**, fundindo estado dos
+> olhos, bocejo, microssono, pose da cabeça, direção do olhar e objetos na mão
+> em uma única pontuação.
 
-## Highlights
+## Destaques
 
-- 🧠 **Two CNNs trained from scratch** — eye state (open/closed, **96%**) and
-  yawning (**98%**), each with full metrics (precision / recall / F1).
-- 🔬 **Architecture study** — the custom CNN vs. ResNet18, MobileNetV3,
-  EfficientNet-B0 and a small ViT (transfer learning), comparing accuracy,
-  speed and size.
-- 🎯 **Decision fusion** — the CNN reports a confidence; below 70% it falls back
-  to the geometric EAR.
-- ⚖️ **Ensemble** — CNN + EAR + PERCLOS combined with weights into one
-  drowsiness signal (a normal blink does **not** lower the score; a long,
-  drowsy blink does).
-- 🔥 **Grad-CAM** — a heatmap proving the CNN looks at the eyelid, not the
-  background (`gradcam.py`).
-- 📊 **Driver Attention Score** with bands: Excellent → Good → Distracted →
-  Alert → Critical.
-- 🚨 **Smart alerts** following the **NHTSA 2-second rule**: a glance off the
-  road of up to 2 s is fine; beyond that it is flagged. Spoken alerts
-  ("look at the road", "look ahead", "stop and rest").
-- 📼 **Black box** (events CSV + video clips) and a **trip summary** screen.
+- 🧠 **Duas CNNs treinadas do zero** — estado do olho (aberto/fechado, **96%**)
+  e bocejo (**98%**), cada uma com métricas completas (precisão / recall / F1).
+- 🔬 **Comparação de arquiteturas** — a CNN própria vs. ResNet18, MobileNetV3,
+  EfficientNet-B0 e um ViT pequeno (transfer learning), comparando acurácia,
+  velocidade e tamanho.
+- 🎯 **Fusão de decisões** — a CNN informa uma confiança; abaixo de 70% ela cai
+  no EAR geométrico como apoio.
+- ⚖️ **Ensemble** — CNN + EAR + PERCLOS combinados com pesos em um único sinal
+  de sonolência (uma piscada normal **não** baixa a pontuação; uma piscada
+  demorada/sonolenta sim).
+- 🔥 **Grad-CAM** — um mapa de calor que prova que a CNN olha para a pálpebra,
+  e não para o fundo (`gradcam.py`).
+- 📊 **Pontuação de Atenção** com faixas: Excelente → Bom → Distraído → Alerta
+  → Crítico.
+- 🚨 **Alertas inteligentes** seguindo a **regra das 2 segundos da NHTSA**: uma
+  olhada para fora da pista de até 2 s é aceitável; acima disso é sinalizada.
+  Alertas por voz ("olhe para a estrada", "olhe para a frente", "pare e
+  descanse").
+- 📼 **Caixa-preta** (CSV de eventos + clipes de vídeo) e uma tela de
+  **resumo da viagem**.
 
-## How it works
+## Como funciona
 
-| Signal | Method |
+| Sinal | Método |
 |---|---|
-| Eye open/closed | **CNN** (deep learning) with EAR fallback |
-| Yawning | **CNN** of the mouth (compared with the MAR) |
-| Microsleep | eyes closed for more than 2 s |
-| PERCLOS | % of time with eyes closed (gold-standard fatigue metric) |
-| Head pose | yaw / pitch via `solvePnP` |
-| Gaze | iris position (looking down = phone) |
-| Hand-held object | EfficientDet (phone, book, cup, bottle, remote) |
-| Exit gesture | open palm |
+| Olho aberto/fechado | **CNN** (deep learning) com fallback no EAR |
+| Bocejo | **CNN** da boca (comparada com o MAR) |
+| Microssono | olhos fechados por mais de 2 s |
+| PERCLOS | % do tempo com olhos fechados (métrica padrão-ouro de fadiga) |
+| Pose da cabeça | yaw / pitch via `solvePnP` |
+| Direção do olhar | posição da íris (olhar para baixo = celular) |
+| Objeto na mão | EfficientDet (celular, livro, copo, garrafa, controle) |
+| Gesto de sair | mão aberta |
 
-## Run
+## Como executar
 
 ```bash
 python -m venv venv
 source venv/bin/activate            # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
-python detector_dms.py              # full system (live)
-python gradcam.py                   # Grad-CAM demo (press 's' to save a figure)
+python detector_dms.py              # sistema completo (ao vivo)
+python gradcam.py                   # demo do Grad-CAM (tecla 's' salva a figura)
 ```
 
-### Train the models (optional — pre-trained weights are included)
+### Treinar os modelos (opcional — os pesos treinados já estão incluídos)
 
 ```bash
-python coletar_dados.py             # collect eye dataset (auto-labelled by EAR)
-python treino.py                    # train the eye CNN -> cnn.pt
+python coletar_dados.py             # coleta o dataset de olhos (rótulo automático por EAR)
+python treino.py                    # treina a CNN do olho -> cnn.pt
 
-python coletar_boca.py              # collect mouth dataset (auto-labelled by MAR)
-python treino_boca.py               # train the yawn CNN -> cnn_bocejo.pt
+python coletar_boca.py              # coleta o dataset da boca (rótulo automático por MAR)
+python treino_boca.py               # treina a CNN de bocejo -> cnn_bocejo.pt
 
 python comparar_arquiteturas.py     # CNN vs ResNet/MobileNet/EfficientNet/ViT
 ```
 
-## Results
+## Resultados
 
-| Model | Accuracy | Inference | Size |
+| Modelo | Acurácia | Inferência | Tamanho |
 |---|---|---|---|
-| **Custom CNN** | **96.0%** | **0.46 ms** | **1.1 MB** |
-| ViT (small) | 96.2% | 1.68 ms | 5.0 MB |
-| ResNet18 | 94.6% | 5.37 ms | 44.7 MB |
-| EfficientNet-B0 | 91.5% | 219 ms | 16.0 MB |
-| MobileNetV3 | 85.8% | 81 ms | 6.1 MB |
+| **CNN própria** | **96,0%** | **0,46 ms** | **1,1 MB** |
+| ViT (pequeno) | 96,2% | 1,68 ms | 5,0 MB |
+| ResNet18 | 94,6% | 5,37 ms | 44,7 MB |
+| EfficientNet-B0 | 91,5% | 219 ms | 16,0 MB |
+| MobileNetV3 | 85,8% | 81 ms | 6,1 MB |
 
-The small custom CNN matches the accuracy of the much larger pre-trained models
-while being **~40× smaller** and **far faster** — ideal for real-time, on-device
-driver monitoring. Full numbers in `comparacao_arquiteturas.txt`,
-`resultados.txt` and `resultados_boca.txt`.
+A CNN própria, pequena, empata em acurácia com os modelos pré-treinados muito
+maiores, sendo **~40× menor** e **muito mais rápida** — ideal para monitoramento
+em tempo real, embarcado. Números completos em `comparacao_arquiteturas.txt`,
+`resultados.txt` e `resultados_boca.txt`.
 
-## Scientific basis
+## Base científica
 
-- **2-second rule** — off-road glances over 2 s roughly double crash risk
-  (NHTSA / VTTI 100-Car Study).
-- **PERCLOS** — eyes closed > 15% of the time indicates drowsiness (NHTSA
-  gold standard).
+- **Regra das 2 segundos** — olhadas para fora da pista acima de 2 s praticamente
+  dobram o risco de acidente (NHTSA / estudo VTTI das 100 viagens).
+- **PERCLOS** — olhos fechados por mais de 15% do tempo indicam sonolência
+  (padrão-ouro da NHTSA).
 
-## Author
+## Autora
 
-Luisa Caetano Araújo — Computer Vision, IFMG Campus Formiga
+Luisa Caetano Araújo — Visão Computacional, IFMG Campus Formiga
 (Prof. Me. Fernando Paim Lima).
