@@ -1,0 +1,15 @@
+=== CNN de Olho (aberto/fechado) ===
+Dataset: 4371 imagens (aberto: 2606, fechado: 1765)
+Acuracia geral: 96.6%
+Parametros: 285,634
+Tempo/imagem: 0.49 ms
+
+Metricas por classe:
+        classe   precisao   recall      F1
+        aberto      96.9%    97.3%   97.1%
+       fechado      96.1%    95.6%   95.8%
+
+Matriz de confusao (linha = verdade, coluna = previsto):
+                      aberto       fechado
+        aberto           499            14
+       fechado            16           345

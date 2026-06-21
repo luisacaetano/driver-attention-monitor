@@ -1,0 +1,10 @@
+=== Comparacao de Arquiteturas (olho aberto/fechado) ===
+Dataset: 4371 imagens | epocas: 6 | entrada: 64x64
+
+     Arquitetura  Acuracia  Precisao   Recall      F1  Tempo/img   Parametros   Tamanho
+---------------------------------------------------------------------------------------
+     CNN propria     96.0%     95.7%    96.2%   95.9%      0.46ms      285,634     1.1MB
+        ResNet18     94.6%     94.6%    94.3%   94.4%      5.37ms   11,177,538    44.7MB
+     MobileNetV3     85.8%     85.3%    85.7%   85.4%     81.11ms    1,519,906     6.1MB
+ EfficientNet-B0     91.5%     91.2%    91.4%   91.3%    219.63ms    4,010,110    16.0MB
+     ViT pequeno     96.2%     95.9%    96.5%   96.1%      1.68ms    1,238,594     5.0MB

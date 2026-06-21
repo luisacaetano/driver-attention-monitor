@@ -1,0 +1,6 @@
+Arquitetura,Acuracia(%),Precisao(%),Recall(%),F1(%),Tempo_ms,Parametros,Tamanho_MB
+CNN propria,96.0,95.7,96.2,95.9,0.46,285634,1.1
+ResNet18,94.6,94.6,94.3,94.4,5.37,11177538,44.7
+MobileNetV3,85.8,85.3,85.7,85.4,81.11,1519906,6.1
+EfficientNet-B0,91.5,91.2,91.4,91.3,219.63,4010110,16.0
+ViT pequeno,96.2,95.9,96.5,96.1,1.68,1238594,5.0

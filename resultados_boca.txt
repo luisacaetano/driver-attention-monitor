@@ -1,0 +1,15 @@
+=== CNN de Bocejo ===
+Dataset: 1438 imagens (bocejando: 391, normal: 1047)
+Acuracia geral: 97.6%
+Parametros: 285,634
+Tempo/imagem: 0.44 ms
+
+Metricas por classe:
+        classe   precisao   recall      F1
+     bocejando     100.0%    91.7%   95.7%
+        normal      96.7%   100.0%   98.3%
+
+Matriz de confusao (linha = verdade, coluna = previsto):
+                   bocejando        normal
+     bocejando            77             7
+        normal             0           203

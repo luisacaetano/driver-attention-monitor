@@ -1,0 +1,12 @@
+# Ambiente
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Dados pessoais (recortes do rosto) e gravacoes - privacidade
+dataset/
+dataset_boca/
+eventos/
+gradcam_*.png
+relatorio_viagem.txt
